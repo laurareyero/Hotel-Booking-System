@@ -47,7 +47,7 @@ hotel-booking-system/
 
 ### 🗄️ Database — `database/schema.sql`
 
-- [ ] Create `personas` table with fields: `id`, `nombre`, `apellidos`, `email`, `telefono`, `dni`, `nacionalidad`, `fecha_nacimiento`, `created_at`, `updated_at`
+- [x ] Create `personas` table with fields: `id`, `nombre`, `apellidos`, `email`, `telefono`, `dni`, `nacionalidad`, `fecha_nacimiento`, `created_at`, `updated_at`
 - [ ] Create `reservations` table with fields: `id`, `persona_id` (FK), `room_id`, `fecha_entrada`, `fecha_salida`, `num_huespedes`, `estado`, `precio_total`, `notas`, `created_at`, `updated_at`
 - [ ] Add foreign key constraint linking `reservations.persona_id` → `personas.id`
 - [ ] Add `CHECK` constraint to ensure `fecha_salida > fecha_entrada`
