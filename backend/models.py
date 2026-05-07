@@ -3,23 +3,36 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 
 
-class Persona(BaseModel):
+class Person(BaseModel):
     id_person: int
-    name: str
-    lastname: str
+    first_name: str
+    last_name:  str
     email: str | None = None
-    age: int
+    phone: str
+    dni: str
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
 
-class Reservation(BaseModel):
-    id_reservation: int
-    id_person: int # foreign key - Persona
+
+class Room(BaseModel):
+    id_room: int
     room_number: int
-    check_in_date: str
-    check_out_date: str          
+    room_type: str #single / double / suite
     price_per_night: float
+    status: str | None = "available"  # available / occupied
+
+    class Config:
+        from_attributes = True
+
+
+class Booking(BaseModel):
+    id_booking: int
+    id_person: int    #foreign key: Person
+    id_room: int  #foreign key: Room
+    check_in_date: str
+    check_out_date: str
+    total_price: float
     status: str | None = "pending" # pending / confirmed / canceled
 
     class Config:
