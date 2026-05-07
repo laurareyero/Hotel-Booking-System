@@ -1,5 +1,5 @@
 import psycopg2
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
 
 
