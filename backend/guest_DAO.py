@@ -1,14 +1,13 @@
-from conexion import Conexion
-from persona import Persona
-from logger_base import log
+from models import Guest 
+from database import get_connection
+import logging as log
 
-
-class PersonaDAO:
+class GuestDAO:
 
     _SELECCIONAR = '''
         SELECT *
         FROM guests
-        ORDER BY id
+        ORDER BY id_guest
     '''
 
     _INSERTAR = '''
@@ -30,28 +29,29 @@ class PersonaDAO:
             email=%s,
             phone=%s,
             dni=%s
-        WHERE id=%s
+        WHERE id_guest=%s
     '''
 
     _ELIMINAR = '''
         DELETE FROM guests
-        WHERE id=%s
+        WHERE id_guest=%s
     '''
-
+    
+    
     @classmethod
-    def insertar(cls, persona):                         
+    def insertar(cls, guest: Guest):                         
         try:
-            with Conexion.obtenerConexion() as conexion:
+            with get_connection() as conexion:
                 with conexion.cursor() as cursor:
                     valores = (
-                        persona.first_name,             
-                        persona.last_name,               
-                        persona.email,                  
-                        persona.phone,
-                        persona.dni,
+                        guest.first_name,             
+                        guest.last_name,               
+                        guest.email,                  
+                        guest.phone,
+                        guest.dni,
                     )
                     cursor.execute(cls._INSERTAR, valores)
-                    log.debug(f'Inserted: {persona}')
+                    log.debug(f'Inserted: {guest}')
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Insertion failed: {error}')
@@ -61,50 +61,46 @@ class PersonaDAO:
     @classmethod
     def seleccionar(cls):
         try:
-            with Conexion.obtenerConexion() as conexion:
+            with get_connection() as conexion:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR)
                     registros = cursor.fetchall()
-                    return [Persona(*registro) for registro in registros]
+                    return [Guest(*registro) for registro in registros]
         except Exception as error:
             log.error(f'Selection failed: {error}')
             raise
 
 
     @classmethod
-    def actualizar(cls, persona):
+    def actualizar(cls, guest: Guest):
         try:
-            with Conexion.obtenerConexion() as conexion:
+            with get_connection() as conexion:
                 with conexion.cursor() as cursor:
                     valores = (
-                        persona.first_name,             
-                        persona.last_name,              
-                        persona.email,                   
-                        persona.phone,
-                        persona.dni,
-                        persona.id,                     
+                        guest.first_name,             
+                        guest.last_name,              
+                        guest.email,                   
+                        guest.phone,
+                        guest.dni,
+                        guest.id_guest,                     
                     )
                     cursor.execute(cls._ACTUALIZAR, valores)
-                    log.debug(f'Updated: {persona}')
+                    log.debug(f'Updated: {guest}')
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Update failed: {error}')
             raise
 
     @classmethod
-    def eliminar(cls, persona):
+    def eliminar(cls, guest: Guest):
         try:
-            with Conexion.obtenerConexion() as conexion:
+            with get_connection() as conexion:
                 with conexion.cursor() as cursor:
-                    valores = (persona.id,)                                              
+                    valores = (guest.id_guest,)                                              
                     cursor.execute(cls._ELIMINAR, valores)
-                    log.debug(f'Deleted: {persona}')
+                    log.debug(f'Deleted: {guest}')
                     return cursor.rowcount
 
         except Exception as error:
             log.error(f'Deletion failed: {error}')
             raise
-
-
-
- 

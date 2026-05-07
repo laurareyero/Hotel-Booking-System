@@ -3,8 +3,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 
 
-class Person(BaseModel):
-    id_person: int
+class Guest(BaseModel):
+    id_guest: int
     first_name: str
     last_name:  str
     email: str | None = None
@@ -28,7 +28,7 @@ class Room(BaseModel):
 
 class Booking(BaseModel):
     id_booking: int
-    id_person: int    #foreign key: Person
+    id_guest: int    #foreign key: Guest
     id_room: int  #foreign key: Room
     check_in_date: str
     check_out_date: str

@@ -1,54 +1,55 @@
-from fastapi import APIRouter
-from booking import Booking
-from booking_dao import BookingDAO
- 
+from fastapi import APIRouter, HTTPException
+from booking_DAO import BookingDAO
+from models import Booking 
+
+
 router = APIRouter()
  
  
-# GET /reservations 
-@router.get('/reservations')
-def get_reservations(status: str = None):
+# GET /bookings  
+@router.get('/bookings')
+def get_bookings(status: str = None):
     return BookingDAO.seleccionar(status=status)
  
  
-# GET /reservations/{id} 
-@router.get('/reservations/{id}')
-def get_reservation(id: int):
-    reservation = BookingDAO.seleccionar_por_id(id)
-    if not reservation:
-        return {'error': f'Reservation {id} not found'}
-    return reservation
+# GET /bookings/{id} 
+@router.get('/bookings/{id}')
+def get_booking(id: int):
+    booking = BookingDAO.seleccionar_por_id(id)
+    if not booking:
+        return {'error': f'Booking {id} not found'}
+    return booking
  
  
-# POST /reservations 
-@router.post('/reservations')
-def create_reservation(booking: Booking):
+# POST /bookings 
+@router.post('/bookings')
+def create_booking(booking: Booking):
     rows = BookingDAO.insertar(booking)
     if rows:
-        return {'message': 'Reservation created successfully'}
-    return {'error': 'Failed to create reservation'}
+        return {'message': 'Booking created successfully'}
+    return {'error': 'Failed to create booking'}
  
  
-# PUT /reservations/{id} 
-@router.put('/reservations/{id}')
-def update_reservation(id: int, booking: Booking):
+# PUT /bookings/{id} 
+@router.put('/bookings/{id}')
+def update_booking(id: int, booking: Booking):
     existing = BookingDAO.seleccionar_por_id(id)
     if not existing:
-        return {'error': f'Reservation {id} not found'}
+        return {'error': f'Booking {id} not found'}
     booking.id = id
     rows = BookingDAO.actualizar(booking)
     if rows:
-        return {'message': 'Reservation updated successfully'}
-    return {'error': 'Failed to update reservation'}
+        return {'message': 'Booking updated successfully'}
+    return {'error': 'Failed to update booking'}
  
  
-# DELETE /reservations/{id} 
-@router.delete('/reservations/{id}')
-def delete_reservation(id: int):
+# DELETE /bookings/{id} 
+@router.delete('/bookings/{id}')
+def delete_booking(id: int):
     existing = BookingDAO.seleccionar_por_id(id)
     if not existing:
-        return {'error': f'Reservation {id} not found'}
+        return {'error': f'Booking {id} not found'}
     rows = BookingDAO.eliminar(existing)
     if rows:
-        return {'message': 'Reservation deleted successfully'}
-    return {'error': 'Failed to delete reservation'}
+        return {'message': 'Booking deleted successfully'}
+    return {'error': 'Failed to delete booking'}
