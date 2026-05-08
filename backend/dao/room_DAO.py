@@ -29,7 +29,7 @@ class RoomDAO:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR)
                     registros = cursor.fetchall()
-                    return [Room(id_room=r[0], room_number=r[1], room_type=r[2], price_per_night=r[3], status=r[4]) for r in registros]
+                    return [Room(id_room=registro[0], room_number=registro[1], room_type=registro[2], price_per_night=registro[3], status=registro[4]) for registro in registros]
 
         except Exception as error:
             log.error(f'Selection failed: {error}')
@@ -42,7 +42,7 @@ class RoomDAO:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR_POR_ID, (id_room,))
                     registro = cursor.fetchone()
-                    return Room(id_room=r[0], room_number=r[1], room_type=r[2], price_per_night=r[3], status=r[4]) if r else None
+                    return Room(id_room=registro[0], room_number=registro[1], room_type=registro[2], price_per_night=registro[3], status=registro[4]) if registro else None
         except Exception as error:
             log.error(f'Selection by id failed: {error}')
             raise
