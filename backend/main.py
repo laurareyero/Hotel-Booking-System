@@ -6,7 +6,7 @@ app = FastAPI(title="Hotel Booking API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # en producción pon la URL de tu frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
