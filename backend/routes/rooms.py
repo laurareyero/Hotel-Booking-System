@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from models import Room
 from dao.room_DAO import RoomDAO
 
-router = APIRouter()
+router = APIRouter(tags=["Rooms"])
 
 
 # GET /rooms
