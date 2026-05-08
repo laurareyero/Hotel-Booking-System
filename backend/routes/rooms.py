@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from models import Room
-from room_DAO import RoomDAO
+from dao.room_DAO import RoomDAO
 
 router = APIRouter()
 
