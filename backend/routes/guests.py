@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from models import Guest
-from guest_DAO import GuestDAO
+from dao.guest_DAO import GuestDAO
 
 router = APIRouter()
 

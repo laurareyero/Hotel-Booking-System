@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from booking_DAO import BookingDAO
+from dao.booking_DAO import BookingDAO
 from models import Booking 
 
 
