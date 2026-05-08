@@ -1,13 +1,12 @@
-import psycopg2
-from fastapi import FastAPI
+from typing import Optional
 from pydantic import BaseModel
 
 
 class Guest(BaseModel):
-    id_guest: int
+    id_guest: Optional[int] = None
     first_name: str
-    last_name:  str
-    email: str | None = None
+    last_name: str
+    email: Optional[str] = None
     phone: str
     dni: str
 
@@ -16,24 +15,24 @@ class Guest(BaseModel):
 
 
 class Room(BaseModel):
-    id_room: int
+    id_room: Optional[int] = None
     room_number: int
-    room_type: str #single / double / suite
+    room_type: str
     price_per_night: float
-    status: str | None = "available"  # available / occupied
+    status: Optional[str] = "available"
 
     class Config:
         from_attributes = True
 
 
 class Booking(BaseModel):
-    id_booking: int
-    id_guest: int    #foreign key: Guest
-    id_room: int  #foreign key: Room
+    id_booking: Optional[int] = None
+    id_guest: int
+    id_room: int
     check_in_date: str
     check_out_date: str
     total_price: float
-    status: str | None = "pending" # pending / confirmed / canceled
+    status: Optional[str] = "pending"
 
     class Config:
         from_attributes = True
