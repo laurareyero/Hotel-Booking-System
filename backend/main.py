@@ -15,3 +15,7 @@ app.add_middleware(
 app.include_router(guests.router)
 app.include_router(rooms.router)
 app.include_router(bookings.router)
+
+@app.get("/")
+def root():
+    return {"message": "Hotel Booking API is running"}
