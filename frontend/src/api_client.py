@@ -1,6 +1,7 @@
 import requests
 
-BASE_URL = "http://localhost:8000"
+import os
+BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 def get_guests():
     response = requests.get(f"{BASE_URL}/guests")
