@@ -15,25 +15,23 @@ st.title("Rooms")
 # CREATE
 st.subheader("Create room")
 
-number = st.number_input("Room number", min_value=1, step=1)
+room_number = st.number_input("Room number", min_value=1, step=1)
 room_type = st.selectbox("Type", ["single", "double", "suite", "deluxe"])
-base_price = st.number_input("Price per night (€)", min_value=0.0, step=0.01)
-capacity = st.number_input("Capacity", min_value=1, step=1)
-description = st.text_area("Description")
-available = st.checkbox("Available", value=True)
+price_per_night = st.number_input("Price per night (€)", min_value=0.0, step=0.01, value=0.0)
+status = st.selectbox("Status", ["available", "occupied", "maintenance"])
 
 if st.button("Create room"):
-    response = create_room({
-        "number": number,
-        "type": room_type,
-        "base_price": base_price,
-        "capacity": capacity,
-        "description": description,
-        "available": available
-    })
+    with st.spinner("Creating room..."):
+        response = create_room({
+            "room_number": room_number,
+            "room_type": room_type,
+            "price_per_night": price_per_night,
+            "status": status
+        })
 
     if response.status_code == 200:
         st.success("Room created successfully")
+        st.balloons()
     else:
         st.error(f"Error creating room: {response.status_code}")
 
@@ -60,23 +58,22 @@ st.divider()
 # UPDATE
 st.subheader("Update room")
 
-update_id = st.number_input("Room ID to update", min_value=1, step=1)
-new_number = st.number_input("New room number", min_value=1, step=1)
-new_type = st.selectbox("New type", ["single", "double", "suite"])
-new_base_price = st.number_input("New price per night (€)", min_value=0.0, step=1.0)
-new_capacity = st.number_input("New capacity", min_value=1, step=1)
-new_description = st.text_area("New description")
-new_available = st.checkbox("Available ", value=True)
+col1, col2 = st.columns(2)
+with col1:
+    new_room_number = st.number_input("New room number", min_value=1, step=1)
+    new_price = st.number_input("New price per night (€)", min_value=0.0, step=0.01, value=0.0)
+with col2:
+    new_room_type = st.selectbox("New type", ["single", "double", "suite", "deluxe"])
+    new_status = st.selectbox("New status", ["available", "occupied", "maintenance"])
 
 if st.button("Update room"):
-    response = update_room(update_id, {
-        "number": new_number,
-        "type": new_type,
-        "base_price": new_base_price,
-        "capacity": new_capacity,
-        "description": new_description,
-        "available": new_available
-    })
+    with st.spinner("Updating room..."):
+        response = update_room(update_id, {
+            "room_number": new_room_number,
+            "room_type": new_room_type,
+            "price_per_night": new_price,
+            "status": new_status
+        })
 
     if response.status_code == 200:
         st.success("Room updated successfully")

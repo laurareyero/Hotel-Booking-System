@@ -10,29 +10,30 @@ from src.api_client import (
 
 st.title("Guests")
 
-
-# CREATE 
+#cREAT
 st.subheader("Create guest")
 
-first_name = st.text_input("First name")
-last_name = st.text_input("Last name")
-email = st.text_input("Email")
-phone = st.text_input("Phone")
-dni = st.text_input("DNI")
+col1, col2 = st.columns(2)
+with col1:
+    first_name = st.text_input("First name")
+    email = st.text_input("Email")
+    dni = st.text_input("DNI")
+with col2:
+    last_name = st.text_input("Last name")
+    phone = st.text_input("Phone")
 
 if st.button("Create guest"):
-
-    response = create_guest({
-        "first_name": first_name,
-        "last_name": last_name,
-        "email": email,
-        "phone": phone,
-        "dni": dni
-    })
-
+    with st.spinner("Creating guest..."):
+        response = create_guest({
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "phone": phone,
+            "dni": dni
+        })
     if response.status_code == 200:
-        st.success("Guest created")
-
+        st.success("Guest created successfully")
+        st.balloons()
     else:
         st.error("Error creating guest")
 
@@ -59,8 +60,7 @@ if st.button("Show guests"):
 
 st.divider()
 
-
-# UPDATE 
+#UPDATE
 st.subheader("Update guest")
 
 update_id = st.number_input(
@@ -69,14 +69,16 @@ update_id = st.number_input(
     step=1
 )
 
-new_first_name = st.text_input("New first name")
-new_last_name = st.text_input("New last name")
-new_email = st.text_input("New email")
-new_phone = st.text_input("New phone")
-new_dni = st.text_input("New DNI")
+col1, col2 = st.columns(2)
+with col1:
+    new_first_name = st.text_input("New first name")
+    new_email = st.text_input("New email")
+    new_dni = st.text_input("New DNI")
+with col2:
+    new_last_name = st.text_input("New last name")
+    new_phone = st.text_input("New phone")
 
 if st.button("Update guest"):
-
     response = update_guest(
         update_id,
         {
@@ -87,7 +89,6 @@ if st.button("Update guest"):
             "dni": new_dni
         }
     )
-
     if response.status_code == 200:
         st.success("Guest updated")
 
