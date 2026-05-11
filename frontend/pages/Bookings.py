@@ -26,8 +26,8 @@ if st.button("Create reservation"):
     response = create_booking({
         "guest_id": guest_id,
         "room_id": room_id,
-        "check_in_date": str(check_in),
-        "check_out_date": str(check_out),
+        "check_in": str(check_in),
+        "check_out": str(check_out),
         "num_guests": num_guests,
         "status": status,
         "total_price": total,
@@ -71,8 +71,8 @@ if st.button("Update reservation"):
         {
             "id_guest": new_guest_id,
             "id_room": new_room_id,
-            "check_in_date": str(new_check_in),
-            "check_out_date": str(new_check_out),
+            "check_in": str(new_check_in),
+            "check_out": str(new_check_out),
             "total_price": new_total,
             "status": new_status
         }

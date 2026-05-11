@@ -73,3 +73,15 @@ def update_booking(id_booking: int, data: dict):
 def delete_booking(id_booking: int):
     response = requests.delete(f"{BASE_URL}/bookings/{id_booking}")
     return response
+
+def create_room(data: dict):
+    response = requests.post(f"{BASE_URL}/rooms", json=data)
+    return response
+
+def update_room(id_room: int, data: dict):
+    response = requests.put(f"{BASE_URL}/rooms/{id_room}", json=data)
+    return response
+
+def delete_room(id_room: int):
+    response = requests.delete(f"{BASE_URL}/rooms/{id_room}")
+    return response

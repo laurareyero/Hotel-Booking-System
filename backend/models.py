@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class Guest(BaseModel):
-    id_guest: Optional[int] = None
+    id: Optional[int] = None
     first_name: str
     last_name: str
     email: Optional[str] = None
@@ -13,26 +13,30 @@ class Guest(BaseModel):
     class Config:
         from_attributes = True
 
-
 class Room(BaseModel):
-    id_room: Optional[int] = None
-    room_number: int
-    room_type: str
-    price_per_night: float
-    status: Optional[str] = "available"
+    id: Optional[int] = None
+    number: int
+    type: str
+    base_price: float
+    capacity: Optional[int] = None
+    description: Optional[str] = None
+    available: Optional[bool] = True
+
 
     class Config:
         from_attributes = True
 
 
 class Booking(BaseModel):
-    id_booking: Optional[int] = None
-    id_guest: int
-    id_room: int
-    check_in_date: str
-    check_out_date: str
-    total_price: float
+    id: Optional[int] = None
+    guest_id: int
+    room_id: int
+    check_in: str
+    check_out: str
     status: Optional[str] = "pending"
+    total_price: float
+    info_adicional:str
+    
 
     class Config:
         from_attributes = True
