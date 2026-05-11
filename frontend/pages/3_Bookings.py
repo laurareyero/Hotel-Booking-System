@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+from src.sidebar import show_sidebar
+show_sidebar()
 from src.api_client import (
     get_bookings,
     create_booking,
@@ -8,10 +10,10 @@ from src.api_client import (
     delete_booking
 )
 
-st.title("Reservations")
+st.title(" 📖 Reservations")
 
 # Create
-st.subheader("Create reservation")
+st.subheader("➕ Create reservation")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -23,7 +25,7 @@ with col2:
     check_out = st.date_input("Check-out date")
     status = st.selectbox("Status", ["pending", "confirmed", "cancelled", "completed"])
 
-if st.button("Create reservation"):
+if st.button("➕ Create reservation"):
     with st.spinner("Creating reservation..."):
         response = create_booking({
             "id_guest": guest_id,
@@ -41,20 +43,20 @@ if st.button("Create reservation"):
 
 
 # Show 
-st.subheader("Reservation list")
+st.subheader(" 📋 Reservation list")
 
-if st.button("Show reservations"):
+if st.button(" 🔍 Show reservations"):
     bookings = get_bookings()
 
     if bookings:
         df = pd.DataFrame(bookings)
         st.dataframe(df)
     else:
-        st.info("No reservations found")
+        st.info(" ℹ️ No reservations found")
 
 
 # Update 
-st.subheader("Update reservation")
+st.subheader(" 🔄 Update reservation")
 
 update_id = st.number_input("Reservation ID to update", min_value=1, step=1)
 
@@ -68,7 +70,7 @@ with col2:
     new_check_out = st.date_input("New check-out date")
     new_status = st.selectbox("New status", ["pending", "confirmed", "cancelled", "completed"])
 
-if st.button("Update reservation"):
+if st.button(" 🔄 Update reservation"):
     with st.spinner("Updating reservation..."):
         response = update_booking(update_id, {
             "id_guest": new_guest_id,
@@ -85,11 +87,11 @@ if st.button("Update reservation"):
 
 
 # Delete 
-st.subheader("Delete reservation")
+st.subheader("❌ Delete reservation")
 
 delete_id = st.number_input("Reservation ID to delete", min_value=1, step=1)
 
-if st.button("Delete reservation"):
+if st.button("❌ Delete reservation"):
     response = delete_booking(delete_id)
 
     if response.status_code == 200:

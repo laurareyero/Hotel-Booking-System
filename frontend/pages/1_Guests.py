@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-
+from src.sidebar import show_sidebar
+show_sidebar()
 from src.api_client import (
     get_guests,
     create_guest,
@@ -8,21 +9,21 @@ from src.api_client import (
     delete_guest
 )
 
-st.title("Guests")
+st.title("🏨 Guests")
 
 #cREAT
-st.subheader("Create guest")
+st.subheader("➕ Create guest")
 
 col1, col2 = st.columns(2)
 with col1:
-    first_name = st.text_input("First name")
-    email = st.text_input("Email")
-    dni = st.text_input("DNI")
+    first_name = st.text_input("👤First name")
+    email = st.text_input("📧Email")
+    dni = st.text_input("🆔DNI")
 with col2:
-    last_name = st.text_input("Last name")
-    phone = st.text_input("Phone")
+    last_name = st.text_input("👤Last name")
+    phone = st.text_input("📞Phone")
 
-if st.button("Create guest"):
+if st.button("➕ Create guest"):
     with st.spinner("Creating guest..."):
         response = create_guest({
             "first_name": first_name,
@@ -42,9 +43,9 @@ st.divider()
 
 
 # SHOW 
-st.subheader("Guest list")
+st.subheader(" 📋 Guest list")
 
-if st.button("Show guests"):
+if st.button(" 🔍 Show guests"):
 
     guests = get_guests()
 
@@ -55,13 +56,13 @@ if st.button("Show guests"):
         st.dataframe(df)
 
     else:
-        st.info("No guests found")
+        st.info(" ℹ️ No guests found")
 
 
 st.divider()
 
 #UPDATE
-st.subheader("Update guest")
+st.subheader("  🔄 Update guest")
 
 update_id = st.number_input(
     "Guest ID to update",
@@ -100,7 +101,7 @@ st.divider()
 
 
 # DELETE
-st.subheader("Delete guest")
+st.subheader("❌ Delete guest")
 
 delete_id = st.number_input(
     "Guest ID to delete",
@@ -108,7 +109,7 @@ delete_id = st.number_input(
     step=1
 )
 
-if st.button("Delete guest"):
+if st.button("❌ Delete guest"):
 
     response = delete_guest(delete_id)
 
