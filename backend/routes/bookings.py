@@ -3,9 +3,8 @@ from dao.booking_DAO import BookingDAO
 from models import Booking 
 
 
-router = APIRouter()
- 
- 
+router = APIRouter(tags=["Bookings"])
+
 # GET /bookings  
 @router.get('/bookings')
 def get_bookings():

@@ -19,33 +19,12 @@ class RoomDAO:
         SET room_number=%s, room_type=%s, price_per_night=%s, status=%s
         WHERE id_room=%s
     '''
- 
-    _ELIMINAR = "DELETE FROM rooms WHERE id_room=%s"
- 
-    @classmethod
-    def seleccionar(cls):
-        try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._SELECCIONAR)
-                    registros = cursor.fetchall()
-                    return [Room(*registro) for registro in registros]
-        except Exception as error:
-            log.error(f'Selection failed: {error}')
-            raise
- 
-    @classmethod
-    def seleccionar_por_id(cls, id_room: int):
-        try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._SELECCIONAR_POR_ID, (id_room,))
-                    registro = cursor.fetchone()
-                    return Room(*registro) if registro else None
-        except Exception as error:
-            log.error(f'Selection by id failed: {error}')
-            raise
- 
+
+    _ELIMINAR = '''
+        DELETE FROM rooms
+        WHERE id_room=%s
+    '''
+
     @classmethod
     def insertar(cls, room: Room):
         try:

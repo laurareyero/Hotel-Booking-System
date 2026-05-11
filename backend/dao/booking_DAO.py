@@ -29,7 +29,7 @@ class BookingDAO:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR)
                     registros = cursor.fetchall()
-                    return [Booking(*registro) for registro in registros]
+                    return [Booking(id_booking=r[0], id_guest=r[1], id_room=r[2], check_in_date=str(r[3]), check_out_date=str(r[4]), total_price=r[5], status=r[6]) for r in registros]
         except Exception as error:
             log.error(f'Selection failed: {error}')
             raise
@@ -41,7 +41,7 @@ class BookingDAO:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR_POR_ID, (id_booking,))
                     registro = cursor.fetchone()
-                    return Booking(*registro) if registro else None
+                    return Booking(id_booking=registro[0], id_guest=registro[1], id_room=registro[2], check_in_date=str(registro[3]), check_out_date=str(registro[4]), total_price=registro[5], status=registro[6]) if registro else None
         except Exception as error:
             log.error(f'Selection by id failed: {error}')
             raise
