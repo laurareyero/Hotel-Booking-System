@@ -41,7 +41,7 @@ class RoomDAO:
             with get_connection() as conexion:
                 with conexion.cursor() as cursor:
                     cursor.execute(cls._SELECCIONAR_POR_ID, (id_room,))
-                    registro = cursor.fetchone()
+                    r= cursor.fetchone()
                     return Room(id_room=r[0], room_number=r[1], room_type=r[2], price_per_night=r[3], status=r[4]) if r else None
         except Exception as error:
             log.error(f'Selection by id failed: {error}')
