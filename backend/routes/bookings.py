@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from dao.booking_DAO import BookingDAO
 from models import Booking 
 from dao.room_DAO import RoomDAO
+import logging as log
 
 
 router = APIRouter(tags=["Bookings"])
@@ -9,6 +10,7 @@ router = APIRouter(tags=["Bookings"])
 # GET /bookings  
 @router.get('/bookings')
 def get_bookings():
+    log.info(f'Fetching all bookings')
     registros = BookingDAO.seleccionar()
     if not registros:
         raise HTTPException(status_code=404, detail='No bookings found')
@@ -81,10 +83,13 @@ def delete_booking(id_booking: int):
 def update_booking_status(id_booking: int, status: str):
     existing = BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
+        log.warning(f'Booking {id_booking} not found')
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
     
     existing.status = status
     BookingDAO.actualizar(existing)
+    log.info(f'Booking {id_booking} status updated to {status}')
+
 
     # Actualizar status de la habitación según el status de la reserva
     room = RoomDAO.seleccionar_por_id(existing.id_room)
@@ -94,5 +99,7 @@ def update_booking_status(id_booking: int, status: str):
         elif status in ['cancelled', 'completed', 'pending']:
             room.status = 'available'
         RoomDAO.actualizar(room)
+        log.info(f'Room {existing.id_room} status updated to {room.status}')
+
 
     return {'message': 'Status updated successfully'}

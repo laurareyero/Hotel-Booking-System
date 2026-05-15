@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from models import Guest
 from dao.guest_DAO import GuestDAO
+import logging as log
 
 router = APIRouter(tags=["Guests"])
 
@@ -26,6 +27,7 @@ def get_guest(id_guest: int):
 # POST /guests
 @router.post('/guests')
 def create_guest(guest: Guest):
+    log.info(f'Creating guest {guest.first_name} {guest.last_name}')
     rows = GuestDAO.insertar(guest)
     if rows:
         return {'message': 'Guest created successfully'}
@@ -35,19 +37,24 @@ def create_guest(guest: Guest):
 # PUT /guests/{id_guest}
 @router.put('/guests/{id_guest}')
 def update_guest(id_guest: int, guest: Guest):
+    log.info(f'Updating guest {id_guest}')
     guest.id_guest = id_guest
     rows = GuestDAO.actualizar(guest)
     if rows:
+        log.info(f'Guest {id_guest} updated successfully')
         return {'message': 'Guest updated successfully'}
+    log.warning(f'Guest {id_guest} not found')
     raise HTTPException(status_code=404, detail=f'Guest {id_guest} not found')
 
 
 # DELETE /guests/{id_guest}
 @router.delete('/guests/{id_guest}')
 def delete_guest(id_guest: int):
+    log.info(f'Deleting guest {id_guest}')
     rows = GuestDAO.eliminar(id_guest)
     if rows:
         return {'message': 'Guest deleted successfully'}
+    log.warning(f'Guest {id_guest} not found')
     raise HTTPException(status_code=404, detail=f'Guest {id_guest} not found')
 
 
