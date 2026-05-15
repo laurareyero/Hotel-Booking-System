@@ -86,3 +86,7 @@ def update_room(id_room: int, data: dict):
 def delete_room(id_room: int):
     response = requests.delete(f"{BASE_URL}/rooms/{id_room}")
     return response
+
+def update_booking_status(id_booking: int, status: str):
+    response = requests.patch(f"{BASE_URL}/bookings/{id_booking}/status", params={"status": status})
+    return response

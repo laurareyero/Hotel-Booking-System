@@ -7,7 +7,8 @@ from src.api_client import (
     get_bookings,
     create_booking,
     update_booking,
-    delete_booking
+    delete_booking,
+    update_booking_status
 )
 
 st.title(" 📖 Reservations")
@@ -98,3 +99,18 @@ if st.button("❌ Delete reservation"):
         st.success("Reservation deleted")
     else:
         st.error("Error deleting reservation")
+        
+
+#Change only status 
+st.subheader("🔄 Change reservation status")
+
+status_id = st.number_input("Reservation ID", min_value=1, step=1)
+new_status = st.selectbox("Select new status", ["pending", "confirmed", "cancelled", "completed"])
+
+if st.button("Update status"):
+    with st.spinner("Updating status..."):
+        response = update_booking_status(status_id, new_status)
+    if response.status_code == 200:
+        st.toast("Status updated! ✅")
+    else:
+        st.error("Error updating status")
