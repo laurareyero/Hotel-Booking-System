@@ -59,6 +59,8 @@ st.divider()
 # UPDATE
 st.subheader("🔄 Update room")
 
+update_id = st.number_input("Room ID to update", min_value=1, step=1)
+
 col1, col2 = st.columns(2)
 with col1:
     new_room_number = st.number_input("New room number", min_value=1, step=1)
