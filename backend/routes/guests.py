@@ -8,7 +8,7 @@ router = APIRouter(tags=["Guests"])
 
 # GET /guests
 @router.get('/guests')
-def get_guests():
+async def get_guests():
     registros = GuestDAO.seleccionar()
     if not registros:
         raise HTTPException(status_code=404, detail='No guests found')
@@ -17,7 +17,7 @@ def get_guests():
 
 # GET /guests/{id_guest}
 @router.get('/guests/{id_guest}')
-def get_guest(id_guest: int):
+async def get_guest(id_guest: int):
     guest = GuestDAO.seleccionar_por_id(id_guest)
     if not guest:
         raise HTTPException(status_code=404, detail=f'Guest {id_guest} not found')
@@ -26,7 +26,7 @@ def get_guest(id_guest: int):
 
 # POST /guests
 @router.post('/guests')
-def create_guest(guest: Guest):
+async def create_guest(guest: Guest):
     log.info(f'Creating guest {guest.first_name} {guest.last_name}')
     rows = GuestDAO.insertar(guest)
     if rows:
@@ -36,7 +36,7 @@ def create_guest(guest: Guest):
 
 # PUT /guests/{id_guest}
 @router.put('/guests/{id_guest}')
-def update_guest(id_guest: int, guest: Guest):
+async def update_guest(id_guest: int, guest: Guest):
     log.info(f'Updating guest {id_guest}')
     guest.id_guest = id_guest
     rows = GuestDAO.actualizar(guest)
@@ -49,7 +49,7 @@ def update_guest(id_guest: int, guest: Guest):
 
 # DELETE /guests/{id_guest}
 @router.delete('/guests/{id_guest}')
-def delete_guest(id_guest: int):
+async def delete_guest(id_guest: int):
     log.info(f'Deleting guest {id_guest}')
     rows = GuestDAO.eliminar(id_guest)
     if rows:

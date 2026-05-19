@@ -9,7 +9,7 @@ router = APIRouter(tags=["Bookings"])
 
 # GET /bookings  
 @router.get('/bookings')
-def get_bookings():
+async def get_bookings():
     log.info(f'Fetching all bookings')
     registros = BookingDAO.seleccionar()
     if not registros:
@@ -19,7 +19,7 @@ def get_bookings():
  
 # GET /bookings/{id_booking:int} 
 @router.get('/bookings/{id_booking:int}')
-def get_booking(id_booking: int):
+async def get_booking(id_booking: int):
     booking = BookingDAO.seleccionar_por_id(id_booking)
     if not booking:
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
@@ -28,7 +28,7 @@ def get_booking(id_booking: int):
  
 # POST /bookings 
 @router.post('/bookings')
-def create_booking(booking: Booking):
+async def create_booking(booking: Booking):
     room = RoomDAO.seleccionar_por_id(booking.id_room)
     if not room:
         raise HTTPException(status_code=404, detail=f'Room {booking.id_room} not found')
@@ -46,7 +46,7 @@ def create_booking(booking: Booking):
 
 # PUT /bookings/{id_booking:int} 
 @router.put('/bookings/{id_booking:int}')
-def update_booking(id_booking: int, booking: Booking):
+async def update_booking(id_booking: int, booking: Booking):
     existing = BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
@@ -59,7 +59,7 @@ def update_booking(id_booking: int, booking: Booking):
 
 # DELETE /bookings/{id_booking:int}
 @router.delete('/bookings/{id_booking:int}')
-def delete_booking(id_booking: int):
+async def delete_booking(id_booking: int):
     existing = BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
      
@@ -80,7 +80,7 @@ def delete_booking(id_booking: int):
 
 # PATCH /bookings/{id_booking}/status
 @router.patch('/bookings/{id_booking}/status')
-def update_booking_status(id_booking: int, status: str):
+async def update_booking_status(id_booking: int, status: str):
     valid_statuses = ['pending', 'confirmed', 'cancelled', 'completed']
     if status not in valid_statuses:
         raise HTTPException(status_code=400, detail=f'Invalid status: {status}')
