@@ -81,25 +81,28 @@ def delete_booking(id_booking: int):
 # PATCH /bookings/{id_booking}/status
 @router.patch('/bookings/{id_booking}/status')
 def update_booking_status(id_booking: int, status: str):
+    valid_statuses = ['pending', 'confirmed', 'cancelled', 'completed']
+    if status not in valid_statuses:
+        raise HTTPException(status_code=400, detail=f'Invalid status: {status}')
+
     existing = BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
-        log.warning(f'Booking {id_booking} not found')
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
-    
+
     existing.status = status
     BookingDAO.actualizar(existing)
-    log.info(f'Booking {id_booking} status updated to {status}')
 
-
-    # Actualizar status de la habitación según el status de la reserva
     room = RoomDAO.seleccionar_por_id(existing.id_room)
     if room:
         if status == 'confirmed':
             room.status = 'occupied'
-        elif status in ['cancelled', 'completed', 'pending']:
-            room.status = 'available'
+        elif status in ['cancelled', 'completed']:
+            # Solo liberar si no hay otras reservas confirmadas en esa habitación
+            otras_activas = BookingDAO.seleccionar_activas_por_room(existing.id_room)
+            otras_activas = [r for r in otras_activas if r[0] != id_booking]
+            if not otras_activas:
+                room.status = 'available'
+        # 'completed y cancelled ' revierten el status de la habitación
         RoomDAO.actualizar(room)
-        log.info(f'Room {existing.id_room} status updated to {room.status}')
-
 
     return {'message': 'Status updated successfully'}

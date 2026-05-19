@@ -21,6 +21,10 @@ class BookingDAO:
     '''
  
     _ELIMINAR = "DELETE FROM bookings WHERE id_booking=%s"
+    SELECCIONAR_ACTIVAS_POR_ROOM = """
+    SELECT * FROM bookings 
+    WHERE id_room = %s AND status = 'confirmed'
+    """
  
     @classmethod
     def seleccionar(cls):
@@ -91,4 +95,14 @@ class BookingDAO:
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Deletion failed: {error}')
+            raise 
+    @classmethod
+    def seleccionar_activas_por_room(cls, id_room: int):
+        try:
+            with get_connection() as conexion:
+                with conexion.cursor() as cursor:
+                    cursor.execute(cls._SELECCIONAR_ACTIVAS_POR_ROOM, (id_room,))
+                    return cursor.fetchall()
+        except Exception as error:
+            log.error(f'Selection by room failed: {error}')
             raise
