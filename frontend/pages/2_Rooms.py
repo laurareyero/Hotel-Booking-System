@@ -4,14 +4,33 @@ from src.sidebar import show_sidebar
 show_sidebar()
 from src.api_client import (
     get_rooms,
-    get_room,
     create_room,
     update_room,
     delete_room
 )
-
+rooms = get_rooms()
 st.title("🛏️Rooms")
+# habitaciones visual
+st.subheader("Overview")
+n_cols = 4
+for i in range(0, len(rooms), n_cols):
+    cols = st.columns(n_cols)
+    batch = rooms[i:i + n_cols]
+    for j, room in enumerate(batch):
+        with cols[j]:
+            with st.container(border=True):
+                st.markdown(f"**Room {room['room_number']}**")
+                st.caption(f"ID: {room['id_room']}")
+                st.caption(f"Type: {room['room_type']}")
+                st.caption(f"€{room['price_per_night']}/night")
+                if room["status"] == "available":
+                    st.markdown(":green[● Available]")
+                elif room["status"] == "occupied":
+                    st.markdown(":red[● Occupied]")
+                else:
+                    st.markdown(":orange[● Maintenance]")
 
+st.divider()
 
 # CREATE
 st.subheader("➕ Create room")
@@ -50,7 +69,7 @@ if st.button(" 🔍 Show rooms"):
         df = pd.DataFrame(rooms)
         st.dataframe(df)
     else:
-        st.info(" ℹ️ No rooms found")
+        st.info(" ℹ No rooms found")
 
 
 st.divider()
@@ -88,11 +107,11 @@ st.divider()
 
 
 # DELETE
-st.subheader("❌ Delete room")
+st.subheader("🗑️ Delete room")
 
 delete_id = st.number_input("Room ID to delete", min_value=1, step=1)
 
-if st.button("❌ Delete room"):
+if st.button("🗑️ Delete room"):
     response = delete_room(delete_id)
 
     if response.status_code == 200:

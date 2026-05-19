@@ -101,7 +101,7 @@ st.divider()
 
 
 # DELETE
-st.subheader("❌ Delete guest")
+st.subheader("🗑️ Delete guest")
 
 delete_id = st.number_input(
     "Guest ID to delete",
@@ -109,7 +109,7 @@ delete_id = st.number_input(
     step=1
 )
 
-if st.button("❌ Delete guest"):
+if st.button("🗑️ Delete guest"):
 
     response = delete_guest(delete_id)
 

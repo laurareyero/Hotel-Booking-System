@@ -20,8 +20,7 @@ class BookingDAO:
         WHERE id_booking=%s
     '''
  
-    _ELIMINAR = "DELETE FROM bookings WHERE id_booking=%s"
-    SELECCIONAR_ACTIVAS_POR_ROOM = """
+    _SELECCIONAR_ACTIVAS_POR_ROOM = """
     SELECT * FROM bookings 
     WHERE id_room = %s AND status = 'confirmed'
     """
