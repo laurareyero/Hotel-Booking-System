@@ -3,12 +3,13 @@ from psycopg.errors import UniqueViolation, ForeignKeyViolation, NotNullViolatio
 from fastapi import HTTPException
 from contextlib import contextmanager
 import logging
+import os 
 
 @contextmanager
-def get_connection():
+async def get_connection():
     conn = None
     try:
-        conn = psycopg.connect("postgresql://postgres.ijgnuxwklohewhhhoygm:DataBASE2356_@aws-0-eu-west-1.pooler.supabase.com:5432/postgres")
+        conn = await psycopg.connect(os.getenv("DATABASE_URL"))
         yield conn
         conn.commit()
     except UniqueViolation as e:
