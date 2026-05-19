@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-
 from src.sidebar import show_sidebar
 show_sidebar()
 from src.api_client import (
@@ -13,6 +12,34 @@ from src.api_client import (
 )
 
 st.title(" 📖 Bookings")
+bookings = get_bookings()
+# Bookings visual
+st.subheader("Overview")
+n_cols = 4
+for i in range(0, len(bookings), n_cols):
+    cols = st.columns(n_cols)
+    batch = bookings[i:i + n_cols]
+    for j, booking in enumerate(batch):
+        room = get_room(booking["id_room"])
+        with cols[j]:
+            with st.container(border=True):
+                st.markdown(f"**Booking {booking['id_booking']}**")
+                st.caption(f"Guest ID: {booking['id_guest']}")
+                st.caption(f"Room ID: {booking['id_room']}")
+                st.caption(f"{room['room_type'].title( )} - €{room['price_per_night']}/night")
+                match booking["status"]:
+                    case "pending":
+                        st.markdown(":orange[● Pending]")
+                    case "confirmed":
+                        st.markdown(":green[● Confirmed]")
+                    case "cancelled":
+                        st.markdown(":red[● Cancelled]")
+                    case "completed":
+                        st.markdown(":blue[● Completed]")
+                    case _:
+                        st.markdown(":grey[● Unknown]")
+
+st.divider()
 
 # Create
 st.subheader("➕ Create booking")
@@ -32,7 +59,7 @@ if check_out > check_in:
     if room:
         nights = (check_out - check_in).days
         total = nights * room["price_per_night"]
-        st.info(f"🌙 {nights} nights × €{room['price_per_night']}/night = **€{total:.2f}**")
+        st.info(f" {nights} nights × €{room['price_per_night']}/night = **€{total:.2f}**")
     else:
         st.warning("Room not found")
 elif check_out <= check_in:
@@ -92,7 +119,7 @@ if new_check_out > new_check_in:
     if room:
         nights = (new_check_out - new_check_in).days
         suggested_total = nights * room["price_per_night"]
-        st.info(f" {nights} nights × €{room['price_per_night']}/night = **€{suggested_total:.2f}**")
+        st.info(f"{nights} nights × €{room['price_per_night']}/night = **€{suggested_total:.2f}**")
     else:
         st.warning("Room not found")
 elif new_check_out <= new_check_in:
