@@ -2,14 +2,15 @@ import streamlit as st
 from src.api_client import get_guests, get_rooms, get_bookings
 
 st.set_page_config(
-    page_title="Hotel Booking System",
+    page_title="Paquito Hotel",
     layout="wide"
 )
+
+st.title("🛎️ Paquito Hotel")
 
 with st.sidebar:
     st.image("hotel.png", use_container_width=True)
 
-st.title("🛎️ Hotel Booking System")
 st.divider()
 
 #  Datos 

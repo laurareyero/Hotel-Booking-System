@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import guests, rooms, bookings
 
-app = FastAPI(title="Hotel Booking API")
+app = FastAPI(title="Paquito Hotel API")
 
 app.add_middleware(
     CORSMiddleware,
