@@ -26,7 +26,8 @@ for i in range(0, len(bookings), n_cols):
                 st.markdown(f"**Booking {booking['id_booking']}**")
                 st.caption(f"Guest ID: {booking['id_guest']}")
                 st.caption(f"Room ID: {booking['id_room']}")
-                st.caption(f"{room['room_type'].title( )} - €{room['price_per_night']}/night")
+                if room:
+                    st.caption(f"{room['room_type'].title()} - €{room['price_per_night']}/night")
                 match booking["status"]:
                     case "pending":
                         st.markdown(":orange[● Pending]")
