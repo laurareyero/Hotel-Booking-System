@@ -21,7 +21,7 @@ for i in range(0, len(rooms), n_cols):
             with st.container(border=True):
                 st.markdown(f"**Room {room['room_number']}**")
                 st.caption(f"ID: {room['id_room']}")
-                st.caption(f"Type: {room['room_type']}")
+                st.caption(f"{room['room_type'].title()}")
                 st.caption(f"€{room['price_per_night']}/night")
                 if room["status"] == "available":
                     st.markdown(":green[● Available]")
