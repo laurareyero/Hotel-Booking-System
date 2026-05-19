@@ -12,57 +12,57 @@ class GuestDAO:
     _ELIMINAR = "DELETE FROM guests WHERE id_guest=%s"
 
     @classmethod
-    def seleccionar(cls):
+    async def seleccionar(cls):
         try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._SELECCIONAR)
-                    registros = cursor.fetchall()
+            async with get_connection() as conexion:
+                async with conexion.cursor() as cursor:
+                    await cursor.execute(cls._SELECCIONAR)
+                    registros = await cursor.fetchall()
                     return [Guest(id_guest=r[0], first_name=r[1], last_name=r[2], email=r[3], phone=r[4], dni=r[5]) for r in registros]
         except Exception as error:
             log.error(f'Selection failed: {error}')
             raise
 
     @classmethod
-    def seleccionar_por_id(cls, id_guest: int):
+    async def seleccionar_por_id(cls, id_guest: int):
         try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._SELECCIONAR_POR_ID, (id_guest,))
-                    r = cursor.fetchone()
+            async with get_connection() as conexion:
+                async with conexion.cursor() as cursor:
+                    await cursor.execute(cls._SELECCIONAR_POR_ID, (id_guest,))
+                    r = await cursor.fetchone()
                     return Guest(id_guest=r[0], first_name=r[1], last_name=r[2], email=r[3], phone=r[4], dni=r[5]) if r else None
         except Exception as error:
             log.error(f'Selection by id failed: {error}')
             raise
 
     @classmethod
-    def insertar(cls, guest: Guest):
+    async def insertar(cls, guest: Guest):
         try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._INSERTAR, (guest.first_name, guest.last_name, guest.email, guest.phone, guest.dni))
+            async with get_connection() as conexion:
+                async with conexion.cursor() as cursor:
+                    await cursor.execute(cls._INSERTAR, (guest.first_name, guest.last_name, guest.email, guest.phone, guest.dni))
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Insertion failed: {error}')
             raise
 
     @classmethod
-    def actualizar(cls, guest: Guest):
+    async def actualizar(cls, guest: Guest):
         try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._ACTUALIZAR, (guest.first_name, guest.last_name, guest.email, guest.phone, guest.dni, guest.id_guest))
+            async with get_connection() as conexion:
+                async with conexion.cursor() as cursor:
+                    await cursor.execute(cls._ACTUALIZAR, (guest.first_name, guest.last_name, guest.email, guest.phone, guest.dni, guest.id_guest))
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Update failed: {error}')
             raise
 
     @classmethod
-    def eliminar(cls, id_guest: int):
+    async def eliminar(cls, id_guest: int):
         try:
-            with get_connection() as conexion:
-                with conexion.cursor() as cursor:
-                    cursor.execute(cls._ELIMINAR, (id_guest,))
+            async with get_connection() as conexion:
+                async with conexion.cursor() as cursor:
+                    await cursor.execute(cls._ELIMINAR, (id_guest,))
                     return cursor.rowcount
         except Exception as error:
             log.error(f'Deletion failed: {error}')

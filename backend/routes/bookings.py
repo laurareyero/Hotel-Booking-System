@@ -11,7 +11,7 @@ router = APIRouter(tags=["Bookings"])
 @router.get('/bookings')
 async def get_bookings():
     log.info(f'Fetching all bookings')
-    registros = BookingDAO.seleccionar()
+    registros = await BookingDAO.seleccionar()
     if not registros:
         raise HTTPException(status_code=404, detail='No bookings found')
     return registros
@@ -20,7 +20,7 @@ async def get_bookings():
 # GET /bookings/{id_booking:int} 
 @router.get('/bookings/{id_booking:int}')
 async def get_booking(id_booking: int):
-    booking = BookingDAO.seleccionar_por_id(id_booking)
+    booking = await BookingDAO.seleccionar_por_id(id_booking)
     if not booking:
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
     return booking
@@ -29,29 +29,29 @@ async def get_booking(id_booking: int):
 # POST /bookings 
 @router.post('/bookings')
 async def create_booking(booking: Booking):
-    room = RoomDAO.seleccionar_por_id(booking.id_room)
+    room = await RoomDAO.seleccionar_por_id(booking.id_room)
     if not room:
         raise HTTPException(status_code=404, detail=f'Room {booking.id_room} not found')
     if room.status != 'available':
         raise HTTPException(status_code=400, detail=f'Room {booking.id_room} is not available')
     
-    rows = BookingDAO.insertar(booking)
+    rows = await BookingDAO.insertar(booking)
     if not rows:
         raise HTTPException(status_code=500, detail='Failed to create booking')
     
     room.status = 'occupied'
-    RoomDAO.actualizar(room)
+    await RoomDAO.actualizar(room)
     
     return {'message': 'Booking created successfully'}
 
 # PUT /bookings/{id_booking:int} 
 @router.put('/bookings/{id_booking:int}')
 async def update_booking(id_booking: int, booking: Booking):
-    existing = BookingDAO.seleccionar_por_id(id_booking)
+    existing = await BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
     booking.id_booking = id_booking
-    rows = BookingDAO.actualizar(booking)
+    rows = await BookingDAO.actualizar(booking)
     if rows:
         return {'message': 'Booking updated successfully'}
     raise HTTPException(status_code=500, detail='Failed to update booking')
@@ -60,20 +60,20 @@ async def update_booking(id_booking: int, booking: Booking):
 # DELETE /bookings/{id_booking:int}
 @router.delete('/bookings/{id_booking:int}')
 async def delete_booking(id_booking: int):
-    existing = BookingDAO.seleccionar_por_id(id_booking)
+    existing = await BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
      
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
    
-    rows = BookingDAO.eliminar(id_booking)
+    rows = await BookingDAO.eliminar(id_booking)
     if not rows:
         raise HTTPException(status_code=500, detail='Failed to delete booking')
     
     # Habitación vuelve a available
-    room = RoomDAO.seleccionar_por_id(existing.id_room)
+    room = await RoomDAO.seleccionar_por_id(existing.id_room)
     if room:
         room.status = 'available'
-        RoomDAO.actualizar(room)
+        await RoomDAO.actualizar(room)
     
     return {'message': 'Booking deleted successfully'}
 
@@ -85,24 +85,24 @@ async def update_booking_status(id_booking: int, status: str):
     if status not in valid_statuses:
         raise HTTPException(status_code=400, detail=f'Invalid status: {status}')
 
-    existing = BookingDAO.seleccionar_por_id(id_booking)
+    existing = await BookingDAO.seleccionar_por_id(id_booking)
     if not existing:
         raise HTTPException(status_code=404, detail=f'Booking {id_booking} not found')
 
     existing.status = status
-    BookingDAO.actualizar(existing)
+    await BookingDAO.actualizar(existing)
 
-    room = RoomDAO.seleccionar_por_id(existing.id_room)
+    room = await RoomDAO.seleccionar_por_id(existing.id_room)
     if room:
         if status == 'confirmed':
             room.status = 'occupied'
         elif status in ['cancelled', 'completed']:
             # Solo liberar si no hay otras reservas confirmadas en esa habitación
-            otras_activas = BookingDAO.seleccionar_activas_por_room(existing.id_room)
+            otras_activas = await BookingDAO.seleccionar_activas_por_room(existing.id_room)
             otras_activas = [r for r in otras_activas if r[0] != id_booking]
             if not otras_activas:
                 room.status = 'available'
         # 'completed y cancelled ' revierten el status de la habitación
-        RoomDAO.actualizar(room)
+        await RoomDAO.actualizar(room)
 
     return {'message': 'Status updated successfully'}
