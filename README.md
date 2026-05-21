@@ -1,13 +1,12 @@
-# 🛎️ Paquito Hotel — Booking Management System
+# Paquito Hotel — Booking Management System
 
 > Final project for **Python From Zero to Hero 2025-2026**
-> Universidad Francisco de Vitoria
 
 A full-stack hotel management platform built with **FastAPI**, **PostgreSQL**, and **Streamlit**. Designed for hotel administrators to manage guests, rooms, and reservations from a single, intuitive dashboard.
 
 ---
 
-## 🏛️ Architecture
+## Architecture
 
 The system is composed of three independent layers that communicate over HTTP and are orchestrated with Docker Compose:
 
@@ -19,7 +18,7 @@ The data flows in one direction: Streamlit → FastAPI → PostgreSQL. Each laye
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Hotel-Booking-System/
@@ -50,7 +49,7 @@ Hotel-Booking-System/
 
 ---
 
-## 🗄️ Step 1 — Database Design
+## Step 1 — Database Design
 
 The database has three tables with proper normalization and referential integrity.
 
@@ -62,7 +61,7 @@ The database has three tables with proper normalization and referential integrit
 
 ---
 
-## 🔧 Step 2 — Pydantic Models
+## Step 2 — Pydantic Models
 
 Each of the three entities has a Pydantic model that defines the expected data structure. FastAPI uses these models to automatically validate every incoming request — if a required field is missing or has the wrong type, the API returns a `422 Unprocessable Entity` error before any database call is made.
 
@@ -70,7 +69,7 @@ The models also handle optional fields gracefully. For example, `id_guest` is op
 
 ---
 
-## ⚡ Step 3 — Async Database Connection
+## Step 3 — Async Database Connection
 
 All database operations use `psycopg.AsyncConnection`, making the entire backend non-blocking. This means that while the backend is waiting for the database to respond, FastAPI can continue serving other incoming requests concurrently — a significant performance advantage over synchronous connections.
 
@@ -78,7 +77,7 @@ The connection manager is built as an async context manager. It opens a connecti
 
 ---
 
-## 🗂️ Step 4 — Data Access Layer (DAO Pattern)
+## Step 4 — Data Access Layer (DAO Pattern)
 
 Each entity has its own DAO class (`GuestDAO`, `RoomDAO`, `BookingDAO`) that encapsulates all SQL queries. The routes never write SQL directly — they only call DAO methods. This separation of concerns makes the code easier to maintain and test.
 
@@ -86,7 +85,7 @@ Every DAO method is asynchronous and follows the same pattern: open an async con
 
 ---
 
-## 🚨 Step 5 — Custom Exception Hierarchy
+## Step 5 — Custom Exception Hierarchy
 
 Instead of scattering generic HTTP exceptions throughout the code, the project uses a clean exception hierarchy rooted in a base `HotelError` class. Each specific error — such as `GuestNotFoundError`, `RoomNotAvailableError`, or `InvalidStatusError` — knows its own HTTP status code and error message.
 
@@ -94,7 +93,7 @@ This approach keeps the route code clean and readable. A route simply raises the
 
 ---
 
-## 📋 Step 6 — Audit Decorator
+## Step 6 — Audit Decorator
 
 Every single endpoint in the API is decorated with `@auditoria_endpoint`. This decorator wraps each route function and automatically logs three things: when the endpoint was called and with what parameters, when it completed successfully, and if it failed — what the error was.
 
@@ -102,7 +101,7 @@ This means full request tracing is achieved without adding any logging code insi
 
 ---
 
-## 🔌 Step 7 — API Endpoints
+## Step 7 — API Endpoints
 
 The API exposes full CRUD operations for all three entities, plus a dedicated PATCH endpoint to update booking status independently.
 
@@ -116,13 +115,13 @@ All endpoints are documented automatically by FastAPI and can be tested interact
 
 ---
 
-## 🤖 Step 8 — Room Status Automation
+## Step 8 — Room Status Automation
 
 The booking system automatically keeps room availability in sync with reservations. When a booking is created, the room is immediately marked as occupied. When a booking is deleted, the room is freed back to available. When the status is changed via the PATCH endpoint, the room status updates accordingly — but only marks the room as available again if there are no other active confirmed bookings for that room.
 
 ---
 
-## 🎨 Step 9 — Streamlit Frontend
+## Step 9 — Streamlit Frontend
 
 The frontend is a multi-page Streamlit application with a custom warm luxury theme inspired by a Mediterranean hotel — deep warm browns for the background, gold as the primary colour, and cream for the text.
 
@@ -134,13 +133,13 @@ The frontend communicates with the backend exclusively through `api_client.py`, 
 
 ---
 
-## 🔒 Step 10 — Security
+## Step 10 — Security
 
 Database credentials are never stored in the source code. They live in a `.env` file in the project root, which is listed in `.gitignore` and never committed to the repository. Docker Compose reads the `.env` file at startup and injects the `DATABASE_URL` as an environment variable into the backend container. Anyone cloning the repository must create their own `.env` file with their own credentials.
 
 ---
 
-## 🚀 Getting Started
+
 
 ### Prerequisites
 Docker and Docker Compose installed on your machine.
@@ -165,13 +164,13 @@ docker-compose up --build
 
 | Service | URL |
 |---------|-----|
-| 🎨 Streamlit Frontend | http://localhost:8501 |
-| ⚡ FastAPI Backend | http://localhost:8000 |
-| 📖 Swagger API Docs | http://localhost:8000/docs |
+| Streamlit Frontend | http://localhost:8501 |
+| FastAPI Backend | http://localhost:8000 |
+| Swagger API Docs | http://localhost:8000/docs |
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
@@ -184,7 +183,7 @@ docker-compose up --build
 
 ---
 
-## 👥 Team
+## Group
 
 | Name | Role |
 |------|------|
@@ -192,5 +191,3 @@ docker-compose up --build
 | Laura Jiménez ||
 | Laura reyero | Speaker |
 
-> Developed as the final project for **Python From Zero to Hero 2025-2026**
-> Universidad Francisco de Vitoria — Professor Pedro Anquela
