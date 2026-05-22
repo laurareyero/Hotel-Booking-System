@@ -1,16 +1,23 @@
 import streamlit as st
 import pandas as pd
+
+st.set_page_config(page_title="Rooms", layout="wide")
+
 from src.sidebar import show_sidebar
 show_sidebar()
+
 from src.api_client import (
     get_rooms,
     create_room,
     update_room,
     delete_room
 )
+
 rooms = get_rooms()
-st.title("🛏️Rooms")
-# habitaciones visual
+
+st.title("🛏️ Rooms")
+
+# OVERVIEW
 st.subheader("Overview")
 n_cols = 4
 for i in range(0, len(rooms), n_cols):
@@ -48,32 +55,27 @@ if st.button("➕ Create room"):
             "price_per_night": price_per_night,
             "status": status
         })
-
     if response.status_code == 200:
-        st.success("Room created successfully")
+        st.success("✅ Room created successfully")
         st.balloons()
     else:
-        st.error(f"Error creating room: {response.status_code}")
-
+        error_detail = response.json().get("detail", "Unknown error")
+        st.error(f"❌ {error_detail}")
 
 st.divider()
 
-
 # SHOW
-st.subheader(" 📋 Room list")
+st.subheader("📋 Room list")
 
-if st.button(" 🔍 Show rooms"):
+if st.button("🔍 Show rooms"):
     rooms = get_rooms()
-
     if rooms:
         df = pd.DataFrame(rooms)
         st.dataframe(df)
     else:
-        st.info(" ℹ No rooms found")
-
+        st.info("ℹ️ No rooms found")
 
 st.divider()
-
 
 # UPDATE
 st.subheader("🔄 Update room")
@@ -96,15 +98,13 @@ if st.button("🔄 Update room"):
             "price_per_night": new_price,
             "status": new_status
         })
-
     if response.status_code == 200:
-        st.success("Room updated successfully")
+        st.success("✅ Room updated successfully")
     else:
-        st.error(f"Error updating room: {response.status_code}")
-
+        error_detail = response.json().get("detail", "Unknown error")
+        st.error(f"❌ {error_detail}")
 
 st.divider()
-
 
 # DELETE
 st.subheader("🗑️ Delete room")
@@ -113,8 +113,8 @@ delete_id = st.number_input("Room ID to delete", min_value=1, step=1)
 
 if st.button("🗑️ Delete room"):
     response = delete_room(delete_id)
-
     if response.status_code == 200:
-        st.success("Room deleted successfully")
+        st.success("✅ Room deleted successfully")
     else:
-        st.error(f"Error deleting room: {response.status_code}")
+        error_detail = response.json().get("detail", "Unknown error")
+        st.error(f"❌ {error_detail}")
